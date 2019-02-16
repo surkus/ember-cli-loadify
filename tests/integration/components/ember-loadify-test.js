@@ -18,10 +18,20 @@ module('Integration | Component | ember-loadify', function(hooks) {
     }
   });
 
+  const ResetRecordsComponent = Component.extend({
+    classNames: ['reset-records'],
+    onClick() {},
+
+    click() {
+      this.get('onClick')();
+    }
+  });
+
   hooks.beforeEach(function() {
     document.getElementById('ember-testing-container').scrollTop = 0;
 
     this.owner.register('component:next-page', NextPageComponent);
+    this.owner.register('component:reset-records', ResetRecordsComponent);
   });
 
   function scrollTo(selector) {
@@ -105,5 +115,30 @@ module('Integration | Component | ember-loadify', function(hooks) {
     await click('.next-page');
 
     assert.equal(this.element.querySelectorAll('.ember-loadify-record').length, 3);
+  });
+
+  test('components can plug in and reset data', async function(assert) {
+    const users1 = buildList('user', 2);
+    const users2 = buildList('user', 1);
+
+    mockQuery('user', { page: 1 }).returns({ json: users1 });
+    mockQuery('user', { page: 2 }).returns({ json: users2 });
+
+    await render(hbs`
+      {{#ember-loadify modelName='user' page=2 as |loadify|}}
+        {{#each loadify.records as |record|}}
+          <div class='ember-loadify-record'>{{record.name}}</div>
+        {{/each}}
+        {{reset-records onClick=(action loadify.reset)}}
+      {{/ember-loadify}}
+    `);
+
+    await scrollTo('.ember-loadify');
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-record').length, 1);
+
+    await click('.reset-records');
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-record').length, 2);
   });
 });

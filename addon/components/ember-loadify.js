@@ -33,6 +33,13 @@ export default Component.extend(InViewportMixin, {
     nextPage() {
       this.incrementProperty('page', 1);
       this.get('fetchData').perform();
+    },
+
+    reset() {
+      this.set('page', 1);
+      this.set('totalPages', null);
+      this.set('records', A([]));
+      this.get('fetchData').perform();
     }
   },
 
