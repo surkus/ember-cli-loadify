@@ -19,13 +19,14 @@ export default Component.extend(InViewportMixin, {
   onRecordsLoaded() {},
 
   isLoading: bool('queryRecords.isRunning'),
+  isResetting: bool('resetRecords.isRunning'),
 
   queryParams: computed('params', 'page', function() {
     return assign(this.get('params') || {},  { page: this.get('page') });
   }),
 
   paramsChanged: observer('params', function() {
-    this.get('reset').perform();
+    this.get('resetRecords').perform();
   }),
 
   init() {
@@ -44,7 +45,7 @@ export default Component.extend(InViewportMixin, {
     }
   },
 
-  reset: task(function*() {
+  resetRecords: task(function*() {
     this.set('page', 1);
     this.set('totalPages', null);
     this.set('records', A([]));

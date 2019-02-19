@@ -26,16 +26,16 @@ module('Unit | Component | ember-loadify', function(hooks) {
     assert.equal(component.get('page'), 2);
   });
 
-  test('reset clears results', function(assert) {
+  test('resetRecords clears results', function(assert) {
     component.set('records', [1, 2, 3]);
-    component.get('reset').perform();
+    component.get('resetRecords').perform();
     assert.equal(component.get('page'), 1);
     assert.equal(component.get('records').length, 0);
   });
 
-  test('reset queries new results', async function(assert) {
+  test('resetRecords queries new results', async function(assert) {
     component.set('records', [1, 2, 3]);
-    await component.get('reset').perform();
+    await component.get('resetRecords').perform();
     assert.equal(component.get('records').length, 2);
   });
 });
