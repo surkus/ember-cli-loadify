@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, waitUntil } from '@ember/test-helpers';
+import { render, click, waitFor, waitUntil } from '@ember/test-helpers';
 import { setupFactoryGuy, mockQuery, buildList } from 'ember-data-factory-guy';
 import hbs from 'htmlbars-inline-precompile';
 
@@ -140,5 +140,34 @@ module('Integration | Component | ember-loadify', function(hooks) {
     await click('.reset-records');
 
     assert.equal(this.element.querySelectorAll('.ember-loadify-record').length, 2);
+  });
+
+  test('params affect results', async function(assert) {
+    const users1 = buildList('user', 2);
+    const users2 = buildList('user', 1);
+
+    mockQuery('user', { page: 1 }).returns({ json: users1 });
+    mockQuery('user', { page: 1, query: 'text' }).returns({ json: users2 });
+
+    this.set('params', {});
+
+    await render(hbs`
+      {{#ember-loadify modelName='user' params=params as |loadify|}}
+        {{#each loadify.records as |record|}}
+          <div class='ember-loadify-record'>{{record.name}}</div>
+        {{/each}}
+        {{reset-records onClick=(action loadify.reset)}}
+      {{/ember-loadify}}
+    `);
+
+    await scrollTo('.ember-loadify');
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-record').length, 2);
+
+    this.set('params', { query: 'text' });
+
+    await waitFor('.ember-loadify-record');
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-record').length, 1);
   });
 });

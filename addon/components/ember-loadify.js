@@ -3,6 +3,8 @@ import InViewportMixin from 'ember-in-viewport';
 import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
+import { assign } from '@ember/polyfills';
+import { observer } from '@ember/object';
 import { task } from 'ember-concurrency';
 import layout from '../templates/components/ember-loadify';
 
@@ -14,10 +16,12 @@ export default Component.extend(InViewportMixin, {
   page: 1,
   onRecordsLoaded() {},
 
-  queryParams: computed('page', function() {
-    return {
-      page: this.get('page')
-    };
+  queryParams: computed('params', 'page', function() {
+    return assign(this.get('params') || {},  { page: this.get('page') });
+  }),
+
+  paramsChanged: observer('params', function() {
+    this.send('reset');
   }),
 
   init() {
