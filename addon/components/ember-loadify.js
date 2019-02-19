@@ -3,6 +3,7 @@ import InViewportMixin from 'ember-in-viewport';
 import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
+import { bool } from '@ember/object/computed';
 import { assign } from '@ember/polyfills';
 import { observer } from '@ember/object';
 import { task } from 'ember-concurrency';
@@ -13,15 +14,18 @@ export default Component.extend(InViewportMixin, {
   store: service(),
 
   classNames: ['ember-loadify'],
+  classNameBindings: ['isLoading:ember-loadify--loading'],
   page: 1,
   onRecordsLoaded() {},
+
+  isLoading: bool('queryRecords.isRunning'),
 
   queryParams: computed('params', 'page', function() {
     return assign(this.get('params') || {},  { page: this.get('page') });
   }),
 
   paramsChanged: observer('params', function() {
-    this.send('reset');
+    this.get('reset').perform();
   }),
 
   init() {
@@ -30,24 +34,24 @@ export default Component.extend(InViewportMixin, {
   },
 
   didEnterViewport() {
-    this.get('fetchData').perform();
+    this.get('queryRecords').perform();
   },
 
   actions: {
     nextPage() {
       this.incrementProperty('page', 1);
-      this.get('fetchData').perform();
-    },
-
-    reset() {
-      this.set('page', 1);
-      this.set('totalPages', null);
-      this.set('records', A([]));
-      this.get('fetchData').perform();
+      this.get('queryRecords').perform();
     }
   },
 
-  fetchData: task(function*() {
+  reset: task(function*() {
+    this.set('page', 1);
+    this.set('totalPages', null);
+    this.set('records', A([]));
+    yield this.get('queryRecords').perform();
+  }),
+
+  queryRecords: task(function*() {
     let records = yield this.get('store').query(this.get('modelName'), this.get('queryParams'));
     this.set('totalPages', records.meta.total_pages);
     this.get('records').pushObjects(records.toArray());

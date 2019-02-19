@@ -170,4 +170,14 @@ module('Integration | Component | ember-loadify', function(hooks) {
 
     assert.equal(this.element.querySelectorAll('.ember-loadify-record').length, 1);
   });
+
+  test('adds ember-loadify--loading class when loading data', async function(assert) {
+    const users = buildList('user', 2);
+
+    mockQuery('user').returns({ json: users });
+
+    await render(hbs`{{ember-loadify modelName='user' isLoading=true}}`);
+
+    assert.ok(this.element.querySelector('div').classList.contains('ember-loadify--loading'));
+  });
 });
