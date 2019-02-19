@@ -16,9 +16,11 @@ module('Unit | Component | ember-loadify', function(hooks) {
     mockQuery('user').returns({ json: users });
   });
 
-  test('queryParams include params and page', function(assert) {
+  test('queryParams include params, page, and perPage', function(assert) {
     component.set('params', { name: 'text' });
-    assert.deepEqual(component.get('queryParams'), { name: 'text', page: 1 });
+    component.set('page', 2);
+    component.set('perPage', 7);
+    assert.deepEqual(component.get('queryParams'), { name: 'text', page: 2, per_page: 7 });
   });
 
   test('nextPage increments page', function(assert) {

@@ -96,8 +96,8 @@ module('Integration | Component | ember-loadify', function(hooks) {
     const users1 = buildList('user', 2);
     const users2 = buildList('user', 1);
 
-    mockQuery('user', { page: 1 }).returns({ json: users1 });
-    mockQuery('user', { page: 2 }).returns({ json: users2 });
+    mockQuery('user', { page: 1, per_page: 10 }).returns({ json: users1 });
+    mockQuery('user', { page: 2, per_page: 10 }).returns({ json: users2 });
 
     await render(hbs`
       {{#ember-loadify modelName='user' as |loadify|}}
@@ -121,8 +121,8 @@ module('Integration | Component | ember-loadify', function(hooks) {
     const users1 = buildList('user', 2);
     const users2 = buildList('user', 1);
 
-    mockQuery('user', { page: 1 }).returns({ json: users1 });
-    mockQuery('user', { page: 2 }).returns({ json: users2 });
+    mockQuery('user', { page: 1, per_page: 10 }).returns({ json: users1 });
+    mockQuery('user', { page: 2, per_page: 10 }).returns({ json: users2 });
 
     await render(hbs`
       {{#ember-loadify modelName='user' page=2 as |loadify|}}
@@ -146,8 +146,8 @@ module('Integration | Component | ember-loadify', function(hooks) {
     const users1 = buildList('user', 2);
     const users2 = buildList('user', 1);
 
-    mockQuery('user', { page: 1 }).returns({ json: users1 });
-    mockQuery('user', { page: 1, query: 'text' }).returns({ json: users2 });
+    mockQuery('user', { page: 1, per_page: 10 }).returns({ json: users1 });
+    mockQuery('user', { page: 1, per_page: 10, query: 'text' }).returns({ json: users2 });
 
     this.set('params', {});
 

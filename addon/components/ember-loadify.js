@@ -16,13 +16,14 @@ export default Component.extend(InViewportMixin, {
   classNames: ['ember-loadify'],
   classNameBindings: ['isLoading:ember-loadify--loading'],
   page: 1,
+  perPage: 10,
   onRecordsLoaded() {},
 
   isLoading: bool('queryRecords.isRunning'),
   isResetting: bool('resetRecords.isRunning'),
 
-  queryParams: computed('params', 'page', function() {
-    return assign(this.get('params') || {},  { page: this.get('page') });
+  queryParams: computed('params', 'page', 'perPage', function() {
+    return assign(this.get('params') || {},  { page: this.get('page'), per_page: this.get('perPage') });
   }),
 
   paramsChanged: observer('params', function() {
