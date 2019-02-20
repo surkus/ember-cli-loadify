@@ -46,5 +46,11 @@ module('Unit | Component | ember-loadify', function(hooks) {
     assert.equal(component.get('isLastPage'), false);
     component.set('page', 2);
     assert.equal(component.get('isLastPage'), true);
-  })
+  });
+
+  test('isEmpty when no records', function(assert) {
+    assert.equal(component.get('isEmpty'), true);
+    component.set('records', [1, 2]);
+    assert.equal(component.get('isEmpty'), false);
+  });
 });

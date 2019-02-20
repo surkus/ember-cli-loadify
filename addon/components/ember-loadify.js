@@ -3,7 +3,7 @@ import InViewportMixin from 'ember-in-viewport';
 import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
-import { bool, not } from '@ember/object/computed';
+import { bool, not, equal } from '@ember/object/computed';
 import { assign } from '@ember/polyfills';
 import { observer } from '@ember/object';
 import { task } from 'ember-concurrency';
@@ -23,6 +23,7 @@ export default Component.extend(InViewportMixin, {
 
   isLoading: bool('queryRecords.isRunning'),
   isResetting: bool('resetRecords.isRunning'),
+  isEmpty: equal('records.length', 0),
   canLoadMore: not('isLastPage'),
 
   isLastPage: computed('page', 'totalPages', function() {
