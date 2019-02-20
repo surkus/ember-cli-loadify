@@ -8,7 +8,7 @@ Installation
 ------------------------------------------------------------------------------
 
 ```
-ember install ember-cli-loadify
+ember install @surkus/ember-cli-loadify
 ```
 
 
