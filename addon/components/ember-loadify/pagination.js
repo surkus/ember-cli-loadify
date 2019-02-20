@@ -9,6 +9,11 @@ export default Component.extend(InViewportMixin, {
 
   onNextPage() {},
 
+  init() {
+    this._super(...arguments);
+    this.set('viewportSpy', true);
+  },
+
   actions: {
     nextPage() {
       this.get('onNextPage')();
