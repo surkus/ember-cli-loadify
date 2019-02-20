@@ -15,6 +15,7 @@ export default Component.extend(InViewportMixin, {
 
   classNames: ['ember-loadify'],
   classNameBindings: ['isLoading:ember-loadify--loading'],
+  nextPageText: 'Load More',
   page: 1,
   perPage: 10,
   totalPages: 0,
