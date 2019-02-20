@@ -1,7 +1,7 @@
 ember-cli-loadify
 ==============================================================================
 
-Lightweight loading library for paginated records. Ember Loadify makes it easy to load what you need, when you need it. No longer waiting on model hashes for pages with multiple models being displayed. Loadify your application by only loading moddels as they come into view!
+Lightweight loading library for paginated records. Ember Loadify makes it easy to load what you need, when you need it. No longer waiting on model hashes for pages with multiple models being displayed. Loadify your application by only loading models as they come into view!
 
 
 Installation
