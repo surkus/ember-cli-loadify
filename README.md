@@ -21,7 +21,7 @@ We want to display a list of records to the user when they reach our component. 
 
 ```
 {{#ember-loadify modelName="user" as |loadify|}}
-  {{#each loadify.records as |record|}}
+  {{#each loadify.records as |user|}}
     <div>{{user.name}}</div>
   {{/each}}
 {{/ember-loadify}}
