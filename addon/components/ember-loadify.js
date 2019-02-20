@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import InViewportMixin from 'ember-in-viewport';
 import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
+import { isNone } from '@ember/utils';
 import { computed } from '@ember/object';
 import { bool, not, equal } from '@ember/object/computed';
 import { assign } from '@ember/polyfills';
@@ -41,7 +42,9 @@ export default Component.extend(InViewportMixin, {
 
   init() {
     this._super(...arguments);
-    this.set('records', A([]));
+
+    if (isNone(this.get('records')))
+      this.set('records', A([]));
   },
 
   didEnterViewport() {
