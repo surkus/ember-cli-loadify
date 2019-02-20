@@ -1,1 +1,6 @@
 {{yield (hash records=records nextPage=(action "nextPage") reset=(perform resetRecords))}}
+{{#if showPagination}}
+  {{#if canLoadMore}}
+    {{ember-loadify/pagination infinite=infinite text=nextPageText onNextPage=(action "nextPage")}}
+  {{/if}}
+{{/if}}

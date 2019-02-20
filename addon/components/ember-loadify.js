@@ -3,7 +3,7 @@ import InViewportMixin from 'ember-in-viewport';
 import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
-import { bool } from '@ember/object/computed';
+import { bool, not } from '@ember/object/computed';
 import { assign } from '@ember/polyfills';
 import { observer } from '@ember/object';
 import { task } from 'ember-concurrency';
@@ -17,10 +17,17 @@ export default Component.extend(InViewportMixin, {
   classNameBindings: ['isLoading:ember-loadify--loading'],
   page: 1,
   perPage: 10,
+  totalPages: 0,
+  showPagination: true,
   onRecordsLoaded() {},
 
   isLoading: bool('queryRecords.isRunning'),
   isResetting: bool('resetRecords.isRunning'),
+  canLoadMore: not('isLastPage'),
+
+  isLastPage: computed('page', 'totalPages', function() {
+    return this.get('page') >= this.get('totalPages');
+  }),
 
   queryParams: computed('params', 'page', 'perPage', function() {
     return assign(this.get('params') || {},  { page: this.get('page'), per_page: this.get('perPage') });
@@ -48,7 +55,7 @@ export default Component.extend(InViewportMixin, {
 
   resetRecords: task(function*() {
     this.set('page', 1);
-    this.set('totalPages', null);
+    this.set('totalPages', 0);
     this.set('records', A([]));
     yield this.get('queryRecords').perform();
   }),

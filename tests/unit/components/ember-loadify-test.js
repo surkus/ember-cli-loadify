@@ -40,4 +40,11 @@ module('Unit | Component | ember-loadify', function(hooks) {
     await component.get('resetRecords').perform();
     assert.equal(component.get('records').length, 2);
   });
+
+  test('isLastPage when page >= totalPages', function(assert) {
+    component.set('totalPages', 2);
+    assert.equal(component.get('isLastPage'), false);
+    component.set('page', 2);
+    assert.equal(component.get('isLastPage'), true);
+  })
 });
