@@ -5,7 +5,7 @@ import layout from '../../templates/components/ember-loadify/pagination';
 export default Component.extend(InViewportMixin, {
   layout,
 
-  classNames: ['load-more-pagination'],
+  classNames: ['ember-loadify-pagination'],
 
   onNextPage() {},
 

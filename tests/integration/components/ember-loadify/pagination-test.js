@@ -10,6 +10,12 @@ module('Integration | Component | ember-loadify/pagination', function(hooks) {
     document.getElementById('ember-testing-container').scrollTop = 0;
   });
 
+  test('it renders with ember-loadify-pagination class', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination}}`);
+
+    assert.ok(this.element.querySelector('div').classList.contains('ember-loadify-pagination'));
+  });
+
   test('it renders button with text', async function(assert) {
     const text = 'Load More!';
     this.set('text', text);
