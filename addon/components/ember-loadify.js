@@ -2,11 +2,10 @@ import Component from '@ember/component';
 import InViewportMixin from 'ember-in-viewport';
 import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
-import { isNone } from '@ember/utils';
+import { isNone, isEqual } from '@ember/utils';
 import { computed } from '@ember/object';
 import { bool, not, equal } from '@ember/object/computed';
 import { assign } from '@ember/polyfills';
-import { observer } from '@ember/object';
 import { task } from 'ember-concurrency';
 import layout from '../templates/components/ember-loadify';
 
@@ -36,10 +35,6 @@ export default Component.extend(InViewportMixin, {
     return assign(this.get('params') || {},  { page: this.get('page'), per_page: this.get('perPage') });
   }),
 
-  paramsChanged: observer('params', function() {
-    this.get('resetRecords').perform();
-  }),
-
   init() {
     this._super(...arguments);
 
@@ -49,6 +44,18 @@ export default Component.extend(InViewportMixin, {
 
   didEnterViewport() {
     this.get('queryRecords').perform();
+  },
+
+  didReceiveAttrs() {
+    this.set('params', this.get('params') || {});
+    this.set('oldParams', this.get('params'));
+  },
+
+  didUpdateAttrs() {
+    if (!isEqual(this.get('params'), this.get('oldParams'))) {
+      this.set('oldParams', this.get('params'));
+      this.get('resetRecords').perform();
+    }
   },
 
   actions: {
