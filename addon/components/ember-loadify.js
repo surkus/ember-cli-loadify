@@ -20,6 +20,7 @@ export default Component.extend(InViewportMixin, {
   perPage: 10,
   totalPages: 0,
   showPagination: true,
+  onPageLoaded() {},
   onRecordsLoaded() {},
 
   isLoading: bool('queryRecords.isRunning'),
@@ -73,9 +74,10 @@ export default Component.extend(InViewportMixin, {
   }),
 
   queryRecords: task(function*() {
-    let records = yield this.get('store').query(this.get('modelName'), this.get('queryParams'));
-    this.set('totalPages', records.meta.total_pages);
-    this.get('records').pushObjects(records.toArray());
+    let model = yield this.get('store').query(this.get('modelName'), this.get('queryParams'));
+    this.set('totalPages', model.meta.total_pages);
+    this.get('records').pushObjects(model.toArray());
+    this.get('onPageLoaded')(model);
     this.get('onRecordsLoaded')(this.get('records'));
   }).restartable()
 });

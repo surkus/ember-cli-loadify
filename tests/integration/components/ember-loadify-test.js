@@ -92,6 +92,24 @@ module('Integration | Component | ember-loadify', function(hooks) {
     assert.equal(records.length, users.data.length);
   });
 
+  test('bubbles onPageLoaded with model', async function(assert) {
+    const users = buildList('user', 2).add({ meta: { total_pages: 1 }});
+
+    mockQuery('user').returns({ json: users });
+
+    let model;
+
+    this.set('loadedAction', (modelReturned) => {
+      model = modelReturned;
+    });
+
+    await render(hbs`{{ember-loadify modelName='user' onPageLoaded=(action loadedAction)}}`);
+
+    await scrollTo('.ember-loadify');
+
+    assert.equal(model.meta.total_pages, 1);
+  });
+
   test('components can plug in and load the next page', async function(assert) {
     const users1 = buildList('user', 2);
     const users2 = buildList('user', 1);
