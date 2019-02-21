@@ -75,7 +75,7 @@ export default Component.extend(InViewportMixin, {
 
   queryRecords: task(function*() {
     let model = yield this.get('store').query(this.get('modelName'), this.get('queryParams'));
-    this.set('totalPages', model.meta.total_pages);
+    this.set('totalPages', model.meta.total_pages || 0);
     this.get('records').pushObjects(model.toArray());
     this.get('onPageLoaded')(model);
     this.get('onRecordsLoaded')(this.get('records'));
