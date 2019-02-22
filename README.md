@@ -195,6 +195,28 @@ Callback for when records are loaded. Returns all records in view.
 {{/ember-loadify}}
 ```
 
+#### onPageLoaded
+
+Callback when each page is loaded with the Ember store record.
+
+```
+  # some controller
+  ...
+  actions: {
+    pageLoaded(page) {
+      console.log(page.meta.total_pages);
+      console.log(page.data.length);
+    }
+  }
+  ...
+```
+
+```
+{{#ember-loadify modelName="user" onPageLoaded=(action "pageLoaded") as |loadify|}}
+  ...
+{{/ember-loadify}}
+```
+
 
 Compatibility
 ------------------------------------------------------------------------------
