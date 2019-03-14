@@ -146,6 +146,12 @@ Load next page when next page button comes into view.
 
 Defaults to `false`
 
+#### paginate
+
+Displays links to pages of records.
+
+Defaults to `false`
+
 #### page
 
 Start from a numbered page.
