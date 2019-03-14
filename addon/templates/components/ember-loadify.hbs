@@ -8,7 +8,7 @@
   nextPage=(action "nextPage")
   reset=(perform resetRecords))}}
 {{#if showPagination}}
-  {{#if canLoadMore}}
-    {{ember-loadify/pagination infinite=infinite text=nextPageText onNextPage=(action "nextPage")}}
+  {{#if isPaginationViewable}}
+    {{ember-loadify/pagination infinite=infinite paginate=paginate text=nextPageText currentPage=page totalPages=totalPages onNextPage=(action "nextPage") onGoToPage=(action "goToPage")}}
   {{/if}}
 {{/if}}

@@ -16,6 +16,17 @@ module('Unit | Component | ember-loadify', function(hooks) {
     mockQuery('user').returns({ json: users });
   });
 
+  test('isPaginationViewable', function(assert) {
+    component.set('totalPages', 2);
+    assert.equal(component.get('isPaginationViewable'), true);
+    component.set('page', 2);
+    assert.equal(component.get('isPaginationViewable'), false);
+    component.set('paginate', true)
+    assert.equal(component.get('isPaginationViewable'), true);
+    component.set('totalPages', 1);
+    assert.equal(component.get('isPaginationViewable'), false);
+  });
+
   test('queryParams include params, page, and perPage', function(assert) {
     component.set('params', { name: 'text' });
     component.set('page', 2);
@@ -26,6 +37,13 @@ module('Unit | Component | ember-loadify', function(hooks) {
   test('nextPage increments page', function(assert) {
     component.send('nextPage');
     assert.equal(component.get('page'), 2);
+  });
+
+  test('goToPage clears results and sets page', function(assert) {
+    component.set('records', [1, 2, 3]);
+    component.send('goToPage', 2);
+    assert.equal(component.get('page'), 2);
+    assert.equal(component.get('records').length, 0);
   });
 
   test('resetRecords clears results', function(assert) {

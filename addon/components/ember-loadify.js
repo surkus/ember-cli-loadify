@@ -20,6 +20,7 @@ export default Component.extend(InViewportMixin, {
   perPage: 10,
   totalPages: 0,
   showPagination: true,
+  paginate: false,
   onPageLoaded() {},
   onRecordsLoaded() {},
 
@@ -34,6 +35,14 @@ export default Component.extend(InViewportMixin, {
 
   queryParams: computed('params', 'page', 'perPage', function() {
     return assign(this.get('params') || {},  { page: this.get('page'), per_page: this.get('perPage') });
+  }),
+
+  isPaginationViewable: computed('canLoadMore', 'paginate', 'totalPages', function() {
+    if (this.get('paginate')) {
+      return this.get('totalPages') > 1;
+    } else {
+      return this.get('canLoadMore');
+    }
   }),
 
   init() {
@@ -62,6 +71,11 @@ export default Component.extend(InViewportMixin, {
   actions: {
     nextPage() {
       this.incrementProperty('page', 1);
+      this.get('queryRecords').perform();
+    },
+    goToPage(page) {
+      this.set('records', A([]));
+      this.set('page', page)
       this.get('queryRecords').perform();
     }
   },

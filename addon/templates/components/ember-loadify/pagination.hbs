@@ -1,1 +1,11 @@
-<a href="#" {{action "nextPage"}} class="ember-loadify-next-page">{{text}}</a>
+{{#if paginate}}
+  <ul>
+    {{#each pageLinks as |page|}}
+      <li>
+        {{ember-loadify/page-link page=page currentPage=currentPage onClick=(action "goToPage")}}
+      </li>
+    {{/each}}
+  </ul>
+{{else}}
+  <a href="#" {{action "nextPage"}} class="ember-loadify-next-page">{{text}}</a>
+{{/if}}
