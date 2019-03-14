@@ -3,11 +3,11 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | ember-loadify/pagination/page-link', function(hooks) {
+module('Integration | Component | ember-loadify/page-link', function(hooks) {
   setupRenderingTest(hooks);
 
   test('display current page link selected', async function(assert) {
-    await render(hbs`{{ember-loadify/pagination/page-link page=2 currentPage=2}}`);
+    await render(hbs`{{ember-loadify/page-link page=2 currentPage=2}}`);
 
     assert.ok(this.element.querySelector('.ember-loadify-page').classList.contains('ember-loadify-page--current'));
   });
@@ -19,7 +19,7 @@ module('Integration | Component | ember-loadify/pagination/page-link', function(
       pageClicked = page;
     });
 
-    await render(hbs`{{ember-loadify/pagination/page-link page=2 currentPage=1 onClick=(action onClick)}}`);
+    await render(hbs`{{ember-loadify/page-link page=2 currentPage=1 onClick=(action onClick)}}`);
 
     await click('a');
 

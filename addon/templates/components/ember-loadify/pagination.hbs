@@ -2,7 +2,7 @@
   <ul>
     {{#each pageLinks as |page|}}
       <li>
-        {{ember-loadify/pagination/page-link page=page currentPage=currentPage onClick=(action "goToPage")}}
+        {{ember-loadify/page-link page=page currentPage=currentPage onClick=(action "goToPage")}}
       </li>
     {{/each}}
   </ul>

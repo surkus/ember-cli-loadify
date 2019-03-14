@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import layout from '../../../templates/components/ember-loadify/pagination/page-link';
+import layout from '../../templates/components/ember-loadify/page-link';
 import { computed } from '@ember/object';
 
 export default Component.extend({
