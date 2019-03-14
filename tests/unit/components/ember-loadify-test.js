@@ -23,6 +23,8 @@ module('Unit | Component | ember-loadify', function(hooks) {
     assert.equal(component.get('isPaginationViewable'), false);
     component.set('paginate', true)
     assert.equal(component.get('isPaginationViewable'), true);
+    component.set('totalPages', 1);
+    assert.equal(component.get('isPaginationViewable'), false);
   });
 
   test('queryParams include params, page, and perPage', function(assert) {
