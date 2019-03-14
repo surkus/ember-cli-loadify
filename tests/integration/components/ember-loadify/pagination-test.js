@@ -60,4 +60,25 @@ module('Integration | Component | ember-loadify/pagination', function(hooks) {
 
     assert.ok(didCallAction, 'callback was fired');
   });
+
+  test('display paginanation links', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=3}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 3);
+  });
+
+  test('click on a page link calls onGoToPage', async function(assert) {
+    let pageClicked = null;
+
+    this.set('onGoToPage', (page) => {
+      pageClicked = page;
+    });
+
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=3 onGoToPage=(action onGoToPage)}}`);
+
+    await click('li:nth-of-type(2) a');
+
+    assert.equal(pageClicked, 2);
+  });
+
 });
