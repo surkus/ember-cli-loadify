@@ -4,7 +4,7 @@ import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import { isNone, isEqual } from '@ember/utils';
 import { computed } from '@ember/object';
-import { bool, not, equal } from '@ember/object/computed';
+import { bool, not, equal, or } from '@ember/object/computed';
 import { assign } from '@ember/polyfills';
 import { task } from 'ember-concurrency';
 import layout from '../templates/components/ember-loadify';
@@ -20,6 +20,7 @@ export default Component.extend(InViewportMixin, {
   perPage: 10,
   totalPages: 0,
   showPagination: true,
+  paginate: false,
   onPageLoaded() {},
   onRecordsLoaded() {},
 
@@ -27,6 +28,7 @@ export default Component.extend(InViewportMixin, {
   isResetting: bool('resetRecords.isRunning'),
   isEmpty: equal('records.length', 0),
   canLoadMore: not('isLastPage'),
+  isPaginationViewable: or('canLoadMore', 'paginate'),
 
   isLastPage: computed('page', 'totalPages', function() {
     return this.get('page') >= this.get('totalPages');
@@ -62,6 +64,11 @@ export default Component.extend(InViewportMixin, {
   actions: {
     nextPage() {
       this.incrementProperty('page', 1);
+      this.get('queryRecords').perform();
+    },
+    goToPage(page) {
+      this.set('records', A([]));
+      this.set('page', page)
       this.get('queryRecords').perform();
     }
   },
