@@ -1,10 +1,16 @@
 {{#if paginate}}
   <ul>
+    {{#if truncatePagination}}
+      <li class="ember-loadify-ellipses">...</li>
+    {{/if}}
     {{#each pageLinks as |page|}}
       <li>
         {{ember-loadify/page-link page=page currentPage=currentPage onClick=(action "goToPage")}}
       </li>
     {{/each}}
+    {{#if truncatePagination}}
+      <li class="ember-loadify-ellipses">...</li>
+    {{/if}}
   </ul>
 {{else}}
   <a href="#" {{action "nextPage"}} class="ember-loadify-next-page">{{text}}</a>

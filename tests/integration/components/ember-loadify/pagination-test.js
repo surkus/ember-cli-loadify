@@ -67,6 +67,18 @@ module('Integration | Component | ember-loadify/pagination', function(hooks) {
     assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 3);
   });
 
+  test('it truncates paginanation links before two after the current page', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination truncatePagination=true paginate=true currentPage=3 totalPages=10}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 8);
+  });
+
+  test('it truncates paginanation links five after the current page', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination truncatePagination=true paginate=true currentPage=1 totalPages=10}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 6);
+  });
+
   test('click on a page link calls onGoToPage', async function(assert) {
     let pageClicked = null;
 

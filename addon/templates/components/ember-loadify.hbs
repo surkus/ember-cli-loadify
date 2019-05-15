@@ -9,6 +9,6 @@
   reset=(perform resetRecords))}}
 {{#if showPagination}}
   {{#if isPaginationViewable}}
-    {{ember-loadify/pagination infinite=infinite paginate=paginate text=nextPageText currentPage=page totalPages=totalPages onNextPage=(action "nextPage") onGoToPage=(action "goToPage")}}
+    {{ember-loadify/pagination truncatePagination=truncatePagination infinite=infinite paginate=paginate text=nextPageText currentPage=page totalPages=totalPages onNextPage=(action "nextPage") onGoToPage=(action "goToPage")}}
   {{/if}}
 {{/if}}
