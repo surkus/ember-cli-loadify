@@ -16,6 +16,12 @@ module('Integration | Component | ember-loadify/pagination', function(hooks) {
     assert.ok(this.element.querySelector('div').classList.contains('ember-loadify-pagination'));
   });
 
+  test('does not display ellipses points', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=3}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-ellipses').length, 0);
+  });
+
   test('it renders button with text', async function(assert) {
     const text = 'Load More!';
     this.set('text', text);
@@ -65,6 +71,12 @@ module('Integration | Component | ember-loadify/pagination', function(hooks) {
     await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=3}}`);
 
     assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 3);
+  });
+
+  test('display ellipses points if pagination is truncated', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination truncatePagination=true paginate=true currentPage=1 totalPages=3}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-ellipses').length, 2);
   });
 
   test('it truncates paginanation links before two after the current page', async function(assert) {
