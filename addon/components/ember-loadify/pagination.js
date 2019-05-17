@@ -7,9 +7,10 @@ import { equal } from '@ember/object/computed';
 export default Component.extend(InViewportMixin, {
   layout,
   isFirstPage: equal('currentPage', 1),
+  isOnePage: equal('totalPages', 1),
 
   classNames: ['ember-loadify-pagination'],
-  isOnePage: equal('totalPages', 1),
+
   onNextPage() {},
   onGoToPage() {},
 
@@ -27,9 +28,10 @@ export default Component.extend(InViewportMixin, {
     }
   },
 
-  nextPages: computed('currentPage', function() {
+  nextPages: computed('currentPage', 'isFirstPage', function() {
     const startPage = (this.isFirstPage ? 2 : this.currentPage);
-    return this._range(startPage, (pp + 5));
+    const nextPageLinks = this.isFirstPage ? 4 : 5;
+    return this._range(startPage, (startPage + nextPageLinks));
   }),
 
   previousPages: computed('currentPage', function() {
@@ -37,13 +39,13 @@ export default Component.extend(InViewportMixin, {
     return this._range(twoPageBefore, (this.currentPage - 1));
   }),
 
-  linksAfter: computed('currentPage', function() {
+  linksAfter: computed('nextPages', 'totalPages', function() {
     return this.nextPages.filter((int) => {
       return int < this.totalPages;
     });
   }),
 
-  linksBefore: computed('currentPage', function() {
+  linksBefore: computed('previousPages', function() {
     return this.previousPages.filter((int) => {
       return int > 1;
     });

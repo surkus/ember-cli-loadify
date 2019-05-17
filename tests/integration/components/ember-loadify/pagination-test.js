@@ -77,7 +77,7 @@ module('Integration | Component | ember-loadify/pagination', function(hooks) {
   test('it truncates paginanation links five after the current page', async function(assert) {
     await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=10}}`);
 
-    assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 8);
+    assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 7);
   });
 
   test('it displays one page link if there is one page in total', async function(assert) {
