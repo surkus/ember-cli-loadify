@@ -16,12 +16,6 @@ module('Integration | Component | ember-loadify/pagination', function(hooks) {
     assert.ok(this.element.querySelector('div').classList.contains('ember-loadify-pagination'));
   });
 
-  test('does not display ellipses points', async function(assert) {
-    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=3}}`);
-
-    assert.equal(this.element.querySelectorAll('.ember-loadify-ellipses').length, 0);
-  });
-
   test('it renders button with text', async function(assert) {
     const text = 'Load More!';
     this.set('text', text);
@@ -44,10 +38,39 @@ module('Integration | Component | ember-loadify/pagination', function(hooks) {
     assert.ok(didCallAction, 'callback was fired');
   });
 
+  test('scrolling to element fires onNextPage action', async function(assert) {
+    let didCallAction = false;
+
+    this.set('onNextPage', () => {
+      didCallAction = true;
+    });
+
+    await render(hbs`{{ember-loadify/pagination infinite=true text="fun" onNextPage=(action onNextPage)}}`);
+    document.querySelector('.ember-loadify-next-page').scrollIntoView();
+
+    let scrolledTo = 0;
+    await waitUntil(() => {
+      if (scrolledTo == document.getElementById('ember-testing-container').scrollTop) {
+        return true;
+      } else {
+        scrolledTo = document.getElementById('ember-testing-container').scrollTop;
+        return false;
+      }
+    })
+
+    assert.ok(didCallAction, 'callback was fired');
+  });
+
   test('display paginanation links', async function(assert) {
     await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=3}}`);
 
     assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 3);
+  });
+
+  test('does not display ellipses points', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=3}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-ellipses').length, 0);
   });
 
   test('display ellipses points if pagination is truncated', async function(assert) {
@@ -100,26 +123,4 @@ module('Integration | Component | ember-loadify/pagination', function(hooks) {
     assert.equal(pageClicked, 2);
   });
 
-  test('scrolling to element fires onNextPage action', async function(assert) {
-    let didCallAction = false;
-
-    this.set('onNextPage', () => {
-      didCallAction = true;
-    });
-
-    await render(hbs`{{ember-loadify/pagination infinite=true text="fun" onNextPage=(action onNextPage)}}`);
-    document.querySelector('.ember-loadify-next-page').scrollIntoView();
-
-    let scrolledTo = 0;
-    await waitUntil(() => {
-      if (scrolledTo == document.getElementById('ember-testing-container').scrollTop) {
-        return true;
-      } else {
-        scrolledTo = document.getElementById('ember-testing-container').scrollTop;
-        return false;
-      }
-    })
-
-    assert.ok(didCallAction, 'callback was fired');
-  });
 });

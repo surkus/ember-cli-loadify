@@ -30,8 +30,7 @@ export default Component.extend(InViewportMixin, {
 
   nextPages: computed('currentPage', 'isFirstPage', function() {
     const startPage = (this.isFirstPage ? 2 : this.currentPage);
-    const nextPageLinks = this.isFirstPage ? 4 : 5;
-    return this._range(startPage, (startPage + nextPageLinks));
+    return this._range(startPage, (this.currentPage + 5));
   }),
 
   previousPages: computed('currentPage', function() {
@@ -51,7 +50,7 @@ export default Component.extend(InViewportMixin, {
     });
   }),
 
-  pageLinks: computed('totalPages', function() {
+  pageLinks: computed('linksBefore', 'linksAfter', function() {
     return this.linksBefore.concat(this.linksAfter);
   }),
 
