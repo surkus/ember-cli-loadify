@@ -28,7 +28,8 @@ export default Component.extend(InViewportMixin, {
   },
 
   nextPages: computed('currentPage', function() {
-    return  this._scope(6, (this.isFirstPage ? 2 : this.currentPage));
+    const startPage = (this.isFirstPage ? 2 : this.currentPage);
+    return this._range(startPage, (pp + 5));
   }),
 
   previousPages: computed('currentPage', function() {
@@ -59,10 +60,6 @@ export default Component.extend(InViewportMixin, {
   showNextEllipses: computed('nextPages', 'linksAfter', function() {
     return this.linksAfter.length == this.nextPages.length;
   }),
-
-  _scope(size, startAt) {
-    return [...Array(size).keys()].map(i => i + startAt);
-  },
 
   _range(start, end) {
     return Array(end - start + 1).fill().map((_, idx) => start + idx);
