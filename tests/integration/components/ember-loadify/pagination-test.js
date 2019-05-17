@@ -44,6 +44,44 @@ module('Integration | Component | ember-loadify/pagination', function(hooks) {
     assert.ok(didCallAction, 'callback was fired');
   });
 
+  test('display paginanation links', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=3}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 3);
+  });
+
+  test('display ellipses points if pagination is truncated', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=9 totalPages=16}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-ellipses').length, 2);
+  });
+
+  test('it truncates paginanation links before two after the current page', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=3 totalPages=10}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 9);
+  });
+
+  test('it truncates paginanation links five after the current page', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=10}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 8);
+  });
+
+  test('click on a page link calls onGoToPage', async function(assert) {
+    let pageClicked = null;
+
+    this.set('onGoToPage', (page) => {
+      pageClicked = page;
+    });
+
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=3 onGoToPage=(action onGoToPage)}}`);
+
+    await click('li:nth-of-type(2) a');
+
+    assert.equal(pageClicked, 2);
+  });
+
   test('scrolling to element fires onNextPage action', async function(assert) {
     let didCallAction = false;
 
@@ -66,43 +104,4 @@ module('Integration | Component | ember-loadify/pagination', function(hooks) {
 
     assert.ok(didCallAction, 'callback was fired');
   });
-
-  test('display paginanation links', async function(assert) {
-    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=3}}`);
-
-    assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 3);
-  });
-
-  test('display ellipses points if pagination is truncated', async function(assert) {
-    await render(hbs`{{ember-loadify/pagination truncatePagination=true paginate=true currentPage=1 totalPages=3}}`);
-
-    assert.equal(this.element.querySelectorAll('.ember-loadify-ellipses').length, 2);
-  });
-
-  test('it truncates paginanation links before two after the current page', async function(assert) {
-    await render(hbs`{{ember-loadify/pagination truncatePagination=true paginate=true currentPage=3 totalPages=10}}`);
-
-    assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 8);
-  });
-
-  test('it truncates paginanation links five after the current page', async function(assert) {
-    await render(hbs`{{ember-loadify/pagination truncatePagination=true paginate=true currentPage=1 totalPages=10}}`);
-
-    assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 6);
-  });
-
-  test('click on a page link calls onGoToPage', async function(assert) {
-    let pageClicked = null;
-
-    this.set('onGoToPage', (page) => {
-      pageClicked = page;
-    });
-
-    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=3 onGoToPage=(action onGoToPage)}}`);
-
-    await click('li:nth-of-type(2) a');
-
-    assert.equal(pageClicked, 2);
-  });
-
 });

@@ -20,7 +20,6 @@ export default Component.extend(InViewportMixin, {
   perPage: 10,
   totalPages: 0,
   showPagination: true,
-  truncatePagination: null,
   paginate: false,
   onPageLoaded() {},
   onRecordsLoaded() {},

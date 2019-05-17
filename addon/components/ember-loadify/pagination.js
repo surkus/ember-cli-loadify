@@ -2,12 +2,14 @@ import Component from '@ember/component';
 import InViewportMixin from 'ember-in-viewport';
 import layout from '../../templates/components/ember-loadify/pagination';
 import { computed } from '@ember/object';
+import { equal } from '@ember/object/computed';
 
 export default Component.extend(InViewportMixin, {
   layout,
+  isFirstPage: equal('currentPage', 1),
 
   classNames: ['ember-loadify-pagination'],
-
+  isOnePage: equal('totalPages', 1),
   onNextPage() {},
   onGoToPage() {},
 
@@ -25,23 +27,46 @@ export default Component.extend(InViewportMixin, {
     }
   },
 
-  previousPageLinks: computed('currentPage', function() {
-    const twoPagesBefore = this.get('currentPage') - 2;
-    const lastDisplayLink  = twoPagesBefore < 1 ? 1 : twoPagesBefore;
-
-    return Array(this.get('currentPage') - lastDisplayLink).fill().map((_, idx) => lastDisplayLink + idx);
+  nextPages: computed('currentPage', function() {
+    return  this._range(6, (this.isFirstPage ? 2 : this.currentPage));
   }),
 
-  nextPageLinks: computed('totalPages', 'currentPage', function() {
-    const fivePagesAfter = this.get('currentPage') + 5 ;
-    const lastDisplayLink  = this.get('totalPages') < fivePagesAfter ? this.get('totalPages') : fivePagesAfter;
+  previousPages: computed('currentPage', function() {
+    const twoPageBefore = this.currentPage - 2;
+    return this._scope(twoPageBefore, (this.currentPage - 1));
+  }),
 
-    return Array(lastDisplayLink - this.get('currentPage') + 1).fill().map((_, idx) => this.get('currentPage') + idx);
+  linksAfter: computed('currentPage', function() {
+    return this.nextPages.filter((int) => {
+      return int < this.totalPages;
+    });
+  }),
+
+  linksBefore: computed('currentPage', function() {
+    return this.previousPages.filter((int) => {
+      return int > 1;
+    });
   }),
 
   pageLinks: computed('totalPages', function() {
-    return this.truncatePagination ? this.previousPageLinks.concat(this.nextPageLinks) : Array.from({length: this.get('totalPages')}, (v, k) => k+1);
+    return this.linksBefore.concat(this.linksAfter);
   }),
+
+  showPreviousEllipses: computed('linksBefore', 'previousPages', function() {
+    return this.linksBefore.length == this.previousPages.length;
+  }),
+
+  showNextEllipses: computed('nextPages', 'linksAfter', function() {
+    return this.linksAfter.length == this.nextPages.length;
+  }),
+
+  _range(size, startAt = 0) {
+    return [...Array(size).keys()].map(i => i + startAt);
+  },
+
+  _scope(start, end) {
+    return Array(end - start + 1).fill().map((_, idx) => start + idx);
+  },
 
   didEnterViewport() {
     if (this.get('infinite'))
