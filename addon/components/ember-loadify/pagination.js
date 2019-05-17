@@ -28,12 +28,12 @@ export default Component.extend(InViewportMixin, {
   },
 
   nextPages: computed('currentPage', function() {
-    return  this._range(6, (this.isFirstPage ? 2 : this.currentPage));
+    return  this._scope(6, (this.isFirstPage ? 2 : this.currentPage));
   }),
 
   previousPages: computed('currentPage', function() {
     const twoPageBefore = this.currentPage - 2;
-    return this._scope(twoPageBefore, (this.currentPage - 1));
+    return this._range(twoPageBefore, (this.currentPage - 1));
   }),
 
   linksAfter: computed('currentPage', function() {
@@ -60,11 +60,11 @@ export default Component.extend(InViewportMixin, {
     return this.linksAfter.length == this.nextPages.length;
   }),
 
-  _range(size, startAt = 0) {
+  _scope(size, startAt) {
     return [...Array(size).keys()].map(i => i + startAt);
   },
 
-  _scope(start, end) {
+  _range(start, end) {
     return Array(end - start + 1).fill().map((_, idx) => start + idx);
   },
 

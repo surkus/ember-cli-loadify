@@ -86,7 +86,6 @@ module('Integration | Component | ember-loadify/pagination', function(hooks) {
     assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 1);
   });
 
-
   test('click on a page link calls onGoToPage', async function(assert) {
     let pageClicked = null;
 
