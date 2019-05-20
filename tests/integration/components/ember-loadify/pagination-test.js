@@ -67,6 +67,48 @@ module('Integration | Component | ember-loadify/pagination', function(hooks) {
     assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 3);
   });
 
+  test('does not display ellipses points', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=3}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-ellipses').length, 0);
+  });
+
+  test('display ellipses points if pagination is truncated', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=9 totalPages=16}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-ellipses').length, 2);
+  });
+
+  test('display ellipses points if there are more than 5 pages after the current page', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=16}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-ellipses').length, 1);
+  });
+
+  test('display ellipses points if there are more than 2 pages before the current page', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=5 totalPages=7}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-ellipses').length, 1);
+  });
+
+  test('it truncates paginanation links before two after the current page', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=3 totalPages=10}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 9);
+  });
+
+  test('it truncates paginanation links five after the current page', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=10}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 7);
+  });
+
+  test('it displays no page links if there is one page in total', async function(assert) {
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=1}}`);
+
+    assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 0);
+  });
+
   test('click on a page link calls onGoToPage', async function(assert) {
     let pageClicked = null;
 
