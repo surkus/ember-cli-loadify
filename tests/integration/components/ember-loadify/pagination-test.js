@@ -86,7 +86,7 @@ module('Integration | Component | ember-loadify/pagination', function(hooks) {
   });
 
   test('display ellipses points if there are more than 2 pages before the current page', async function(assert) {
-    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=4 totalPages=6}}`);
+    await render(hbs`{{ember-loadify/pagination paginate=true currentPage=5 totalPages=7}}`);
 
     assert.equal(this.element.querySelectorAll('.ember-loadify-ellipses').length, 1);
   });
@@ -103,10 +103,10 @@ module('Integration | Component | ember-loadify/pagination', function(hooks) {
     assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 7);
   });
 
-  test('it displays one page link if there is one page in total', async function(assert) {
+  test('it displays no page links if there is one page in total', async function(assert) {
     await render(hbs`{{ember-loadify/pagination paginate=true currentPage=1 totalPages=1}}`);
 
-    assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 1);
+    assert.equal(this.element.querySelectorAll('.ember-loadify-page').length, 0);
   });
 
   test('click on a page link calls onGoToPage', async function(assert) {

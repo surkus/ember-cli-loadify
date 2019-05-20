@@ -2,12 +2,12 @@ import Component from '@ember/component';
 import InViewportMixin from 'ember-in-viewport';
 import layout from '../../templates/components/ember-loadify/pagination';
 import { computed } from '@ember/object';
-import { equal } from '@ember/object/computed';
+import { gt, and } from '@ember/object/computed';
 
 export default Component.extend(InViewportMixin, {
   layout,
-  isFirstPage: equal('currentPage', 1),
-  isOnePage: equal('totalPages', 1),
+  isMultiPage: gt('totalPages', 1),
+  showPagination: and('paginate', 'isMultiPage'),
 
   classNames: ['ember-loadify-pagination'],
 
@@ -28,38 +28,16 @@ export default Component.extend(InViewportMixin, {
     }
   },
 
-  nextPages: computed('currentPage', 'isFirstPage', function() {
-    const startPage = (this.isFirstPage ? 2 : this.currentPage);
-    return this._range(startPage, (this.currentPage + 5));
+  pageLinks: computed('currentPage', 'totalPages', function() {
+    return this._range(Math.max(2, this.currentPage - 2), Math.min((this.currentPage + 5), (this.totalPages - 1)));
   }),
 
-  previousPages: computed('currentPage', function() {
-    const twoPageBefore = this.currentPage - 2;
-    return this._range(twoPageBefore, (this.currentPage - 1));
+  showPreviousEllipses: computed('pageLinks', function() {
+    return this.pageLinks.length && this.pageLinks[0] != 2;
   }),
 
-  linksAfter: computed('nextPages', 'totalPages', function() {
-    return this.nextPages.filter((int) => {
-      return int < this.totalPages;
-    });
-  }),
-
-  linksBefore: computed('previousPages', function() {
-    return this.previousPages.filter((int) => {
-      return int > 1;
-    });
-  }),
-
-  pageLinks: computed('linksBefore', 'linksAfter', function() {
-    return this.linksBefore.concat(this.linksAfter);
-  }),
-
-  showPreviousEllipses: computed('linksBefore', 'previousPages', function() {
-    return this.linksBefore.length == this.previousPages.length;
-  }),
-
-  showNextEllipses: computed('nextPages', 'linksAfter', function() {
-    return this.linksAfter.length == this.nextPages.length;
+  showNextEllipses: computed('pageLinks', 'totalPages', function() {
+    return this.pageLinks.length && this.pageLinks[this.pageLinks.length - 1] != (this.totalPages - 1);
   }),
 
   _range(start, end) {
