@@ -231,6 +231,12 @@ Compatibility
 * Ember CLI v2.13 or above
 
 
+Contributing
+------------------------------------------------------------------------------
+
+See the [Contributing](CONTRIBUTING.md) guide for details.
+
+
 License
 ------------------------------------------------------------------------------
 
