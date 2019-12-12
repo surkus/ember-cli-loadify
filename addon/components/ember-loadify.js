@@ -4,7 +4,7 @@ import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import { isNone, isEqual } from '@ember/utils';
 import { computed } from '@ember/object';
-import { bool, not, equal } from '@ember/object/computed';
+import { bool, not, equal, or } from '@ember/object/computed';
 import { assign } from '@ember/polyfills';
 import { task } from 'ember-concurrency';
 import layout from '../templates/components/ember-loadify';
@@ -25,7 +25,8 @@ export default Component.extend(InViewportMixin, {
   onPageLoaded() {},
   onRecordsLoaded() {},
 
-  isLoading: bool('queryRecords.isRunning'),
+  notFired: not('hasQueried'),
+  isLoading: or('notFired', 'queryRecords.isRunning'),
   isResetting: bool('resetRecords.isRunning'),
   isEmpty: equal('records.length', 0),
   canLoadMore: not('isLastPage'),
@@ -90,6 +91,9 @@ export default Component.extend(InViewportMixin, {
   }),
 
   queryRecords: task(function*() {
+    if (this.get('notFired'))
+      this.set('hasQueried', true);
+
     let model = yield this.get('store').query(this.get('modelName'), this.get('queryParams'));
     this.set('totalPages', model.meta.total_pages || 0);
     this.set('totalCount', model.meta.total_count || 0);
