@@ -19,6 +19,7 @@ export default Component.extend(InViewportMixin, {
   page: 1,
   perPage: 10,
   totalPages: 0,
+  totalCount: 0,
   showPagination: true,
   paginate: false,
   onPageLoaded() {},
@@ -83,6 +84,7 @@ export default Component.extend(InViewportMixin, {
   resetRecords: task(function*() {
     this.set('page', 1);
     this.set('totalPages', 0);
+    this.set('totalCount', 0);
     this.set('records', A([]));
     yield this.get('queryRecords').perform();
   }),
@@ -90,6 +92,7 @@ export default Component.extend(InViewportMixin, {
   queryRecords: task(function*() {
     let model = yield this.get('store').query(this.get('modelName'), this.get('queryParams'));
     this.set('totalPages', model.meta.total_pages || 0);
+    this.set('totalCount', model.meta.total_count || 0);
     this.get('records').pushObjects(model.toArray());
     this.get('onPageLoaded')(model);
     this.get('onRecordsLoaded')(this.get('records'));
