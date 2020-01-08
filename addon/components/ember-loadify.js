@@ -102,5 +102,5 @@ export default Component.extend(InViewportMixin, {
     this.get('records').pushObjects(model.toArray());
     this.get('onPageLoaded')(model);
     this.get('onRecordsLoaded')(this.get('records'));
-  }).restartable()
+  }).drop()
 });
