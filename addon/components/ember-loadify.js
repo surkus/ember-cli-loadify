@@ -55,7 +55,9 @@ export default Component.extend(InViewportMixin, {
   },
 
   didEnterViewport() {
-    this.get('queryRecords').perform();
+    if (this.notFired || this.canLoadMore) {
+      this.get('queryRecords').perform();
+    }
   },
 
   didReceiveAttrs() {
